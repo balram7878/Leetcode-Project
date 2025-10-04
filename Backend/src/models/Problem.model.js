@@ -1,4 +1,4 @@
-const { Schema,model } = require("mongoose");
+const { Schema, model } = require("mongoose");
 
 const problemSchema = new Schema(
   {
@@ -32,11 +32,11 @@ const problemSchema = new Schema(
     },
     visibleTestCases: [
       {
-        input: {
+        stdin: {
           type: String,
           required: true,
         },
-        output: {
+        expected_output: {
           type: String,
           required: true,
         },
@@ -48,11 +48,11 @@ const problemSchema = new Schema(
     ],
     hiddenTestCases: [
       {
-        input: {
+        stdin: {
           type: String,
           required: true,
         },
-        output: {
+        expected_output: {
           type: String,
           required: true,
         },
@@ -71,15 +71,28 @@ const problemSchema = new Schema(
         },
       },
     ],
+    referenceSolution: [
+      {
+        language: {
+          type: String,
+          required: true,
+          enum: ["C++", "Java", "Python", "JavaScript", "Rust", "C"],
+        },
+        source_code: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
     problemCreator: {
       type: Schema.Types.ObjectId,
-      ref:"User",
-      required: true
+      ref: "User",
+      required: true,
     },
   },
   { timestamps: true }
 );
 
-const problem=model("problem",problemSchema);
+const Problem = model("Problem", problemSchema);
 
-module.exports = problem;
+module.exports = Problem;

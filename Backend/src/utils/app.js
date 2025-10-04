@@ -1,8 +1,9 @@
 const express = require("express");
-const main = require("./config/db");
+const main = require("../config/db");
 const cookieParser = require("cookie-parser");
-const userRouter = require("./routes/auth");
-const client = require("./config/redis");
+const userRouter = require("../domains/auth/auth.routes");
+const problemRouter = require("../domains/problem/problem.routes");
+const client = require("../config/redis");
 require("dotenv").config();
 
 const app = express();
@@ -10,8 +11,8 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/auth",userRouter);
-
+app.use("/auth", userRouter);
+app.use("/problem", problemRouter);
 
 const initializeConnection = async () => {
   try {
