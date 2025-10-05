@@ -36,17 +36,6 @@
 //1000,4,3
 //1000+4*3=1012
 
-let arr = [
-  {
-    token: "db54881d-bcf5-4c7b-a2e3-d33fe7e25de7",
-  },
-  {
-    token: "ecc52a9b-ea80-4a00-ad50-4ab6cc3bb2a1",
-  },
-  {
-    token: "1b35ec3b-5776-48ef-b646-d5522bdeb2cc",
-  },
-];
 
 const tokensArray=arr.map(e=>e.token)
 console.log(tokensArray.join(","))
