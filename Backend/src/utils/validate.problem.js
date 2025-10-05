@@ -1,4 +1,5 @@
 const validateProblem = (problem) => {
+
   const mandatoryFields = [
     "title",
     "description",
@@ -8,9 +9,8 @@ const validateProblem = (problem) => {
     "hiddenTestCases",
     "boilerplateCode",
     "referenceSolution",
-    "problemCreator",
   ];
-  const allRequired = mandatoryFields.every((e) => problem.keys().includes(e));
+  const allRequired = mandatoryFields.every((e) => Object.keys(problem).includes(e));
   if (!allRequired) throw new Error("mandatory fields are missing");
 };
 

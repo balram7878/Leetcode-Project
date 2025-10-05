@@ -1,4 +1,4 @@
-const { loginValidation } = require("../../utils/validate");
+const { loginValidation } = require("../../utils/validate.user");
 const { registrationValidation } = require("../../utils/validate.user");
 const client = require("../../config/redis");
 const user = require("../../models/User.model");

@@ -23,13 +23,13 @@ const adminValidation = async (req, res, next) => {
     if (isBlocked)
       return res.status(401).json({ error: "token has been revoked" });
 
-    if (req.role != "admin")
+    if (payload.role != "admin")
       res.status(401).json({ error: "unauthorized identity" });
 
     req.user = payload;
     req.token = token;
     req.role = payload.role;
-
+    
     return next();
   } catch (err) {
     return res.status(401).json({ error: err.message || "Unauthorized" });

@@ -1,7 +1,7 @@
 // let arr=[12,4,1,2,23,90,11];
 // arr.sort((a,b)=>b-a)
 // // let arr=["one","One","two","Two","TWO","three"]
-// console.log(arr)  
+// console.log(arr)
 
 /*
 12,4 -> 8 -> 4,12,1,2
@@ -27,11 +27,29 @@
 
 */
 
-let arr=[1,2,[3,4],5,[6,7,8],[[9,10,11]]];
-console.log(arr.flat(2))
+// let arr = [1, 2, [3, 4], 5, [6, 7, 8], [[9, 10, 11]]];
+// console.log(arr.flat(2));
 
 //address=base_address+sizeof(element)*index
 
 //10,20,30,40
 //1000,4,3
 //1000+4*3=1012
+
+let arr = [
+  {
+    token: "db54881d-bcf5-4c7b-a2e3-d33fe7e25de7",
+  },
+  {
+    token: "ecc52a9b-ea80-4a00-ad50-4ab6cc3bb2a1",
+  },
+  {
+    token: "1b35ec3b-5776-48ef-b646-d5522bdeb2cc",
+  },
+];
+
+const tokensArray=arr.map(e=>e.token)
+console.log(tokensArray.join(","))
+// for(let {token} of arr)
+//     console.log(token)
+
