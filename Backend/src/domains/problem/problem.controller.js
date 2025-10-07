@@ -65,9 +65,9 @@ const createProblem = async (req, res) => {
 const deleteProblem = async (req, res) => {
   try {
     if (!req.params.id) return res.status(404).json({ message: "id missing" });
-    const deletedUser = await problem_model.findByIdAndDelete(req.params.id);
-    if (!deletedUser)
-      return res.status(404).json({ message: "user not found" });
+    const deletedProblem = await problem_model.findByIdAndDelete(req.params.id);
+    if (!deletedProblem)
+      return res.status(404).json({ message: "problem not found" });
     res.status(200).json({ message: "problem deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message || "server error" });
@@ -80,7 +80,7 @@ const getAllProblems = async (req, res) => {
     // const page=0;
     // const skip=(page-1)*limit;
     // const allProblems=await problem_model.find(req.params.id).skip(skip).limit(limit);
-    const allProblems = await problem_model.find();
+    const allProblems = await problem_model.find().select("_id title tags difficulty");
     res.status(200).json(allProblems);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -91,7 +91,7 @@ const getProblem = async (req, res) => {
   try {
     const _id = req.params.id;
     if (!_id) return res.status(404).json({ message: "id missing" });
-    const problem = await problem_model.findById(_id);
+    const problem = await problem_model.findById(_id).select("_id title description tags difficulty visibleTestCases boilerplateCode");
     if (!problem) return res.status(404).json({ message: "problem not found" });
     res.status(200).json(problem);
   } catch (err) {
@@ -121,36 +121,39 @@ const updateProblem = async (req, res) => {
       problemCreator,
     } = data;
 
-    const submissions = [];
+    if (referenceSolution) {
+      const submissions = [];
 
-    for (const { language, source_code } of referenceSolution) {
-      const language_id = getLanguageId(language);
-      for (const { stdin, expected_output } of visibleTestCases) {
-        submissions.push({
-          language_id,
-          source_code: source_code.trim(),
-          stdin,
-          expected_output,
-        });
+      for (const { language, source_code } of referenceSolution) {
+        const language_id = getLanguageId(language);
+        for (const { stdin, expected_output } of visibleTestCases) {
+          submissions.push({
+            language_id,
+            source_code: source_code.trim(),
+            stdin,
+            expected_output,
+          });
+        }
       }
-    }
 
-    const submissionTokens = await createBatchedSubmission(submissions);
-    const tokensArray = submissionTokens.map((e) => e.token);
-    const tokensString = tokensArray.join(",");
-    const finalSubmissionResult = await getBatchedSubmission(tokensString);
-    console.log(finalSubmissionResult);
-    for (let { status_id } of finalSubmissionResult.submissions) {
-      if (status_id != 3) {
-        return res.status(400).json({
-          error: statuses[status_id] || "reference solution failed validation",
-        });
+      const submissionTokens = await createBatchedSubmission(submissions);
+      const tokensArray = submissionTokens.map((e) => e.token);
+      const tokensString = tokensArray.join(",");
+      const finalSubmissionResult = await getBatchedSubmission(tokensString);
+      console.log(finalSubmissionResult);
+      for (let { status_id } of finalSubmissionResult.submissions) {
+        if (status_id != 3) {
+          return res.status(400).json({
+            error:
+              statuses[status_id] || "reference solution failed validation",
+          });
+        }
       }
     }
 
     const problem = await problem_model.findByIdAndUpdate(_id, data, {
       new: true,
-      runValidators:true
+      runValidators: true,
     });
     if (!problem) return res.status(404).json({ message: "problem not found" });
     res.status(200).json({ message: "problem updated successfully", problem });
