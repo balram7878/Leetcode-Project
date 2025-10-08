@@ -5,6 +5,7 @@ const {
   getBatchedSubmission,
   getLanguageId,
 } = require("../../utils/judge.0");
+
 const submit = async (req, res) => {
   try {
     const userId = req.payload.sub;
@@ -24,13 +25,13 @@ const submit = async (req, res) => {
 
     const { hiddenTestCases } = problem;
 
-    const solution = submission_model.create({
+    const solution = await submission_model.create({
       userId,
       problemId,
       code,
       language,
       status: "Pending",
-      totalTestCases: problem.hiddenTestCases.length,
+      totalTestCases: hiddenTestCases.length,
     });
 
     const language_id = getLanguageId(language);
@@ -46,34 +47,52 @@ const submit = async (req, res) => {
 
     const submissionTokens = await createBatchedSubmission(submissions);
     const tokens = submissionTokens.map((e) => e.token);
-    const tokenString = tokens.json(",");
+    const tokenString = tokens.join(",");
     const finalResult = await getBatchedSubmission(tokenString);
 
     let totalTime = 0;
     let totalMemory = 0;
-    let status = "";
-    let count = 0;
-    let err = "";
+    let overallStatus = "Accepted";
+    let passedCount = 0;
+    let overallErrorMessage = null;
+    let firstErrorStatusId = null;
 
-    finalResult.submissions.map(({ status_id, memory, time, stderr }) => {
-      if (status_id == 3) {
-        status = "Accepted";
-        totalMemory = Math.max(totalMemory, memory);
-        totalTime = time + totalTime;
-        err = null;
-        count++;
-      } else {
-        status = "Error";
-        err = stderr;
+    for (let submission of finalResult.submissions) {
+      const { status_id, time, memory, stderr } = submission;
+      if (status_id !== 3) {
+        if (overallStatus === "Accepted") {
+          overallStatus = "Error";
+          overallErrorMessage = stderr;
+          firstErrorStatusId = status_id;
+        }
+        continue;
       }
-    });
+      passedCount++;
+      totalTime += time;
+      totalMemory = Math.max(totalMemory, memory);
+    }
 
-    (await solution).status = status;
-    (await solution).memory = totalMemory;
-    (await solution).runtime = totalTime;
-    (await solution).totalTestCasesPassed = count;
-    (await solution).errorMessage=err;
-    
+    solution.status = overallStatus;
+    solution.memory = totalMemory;
+    solution.runtime = totalTime;
+    solution.totalTestCasesPassed = passedCount;
+    solution.errorMessage = overallErrorMessage;
+    await solution.save();
+
+    if (overallStatus === "Accepted") {
+      return res.status(200).json({
+        message: "Submission accepted!",
+        status: overallStatus,
+        passed: passedCount,
+      });
+    } else {
+      return res.status(200).json({
+        message: "Submission failed",
+        status: overallStatus,
+        passed: passedCount,
+        error: overallErrorMessage,
+      });
+    }
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -86,4 +105,4 @@ const run = async (req, res) => {
   }
 };
 
-module.export = { submit, run };
+module.exports = { submit,run};
