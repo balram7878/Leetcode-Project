@@ -6,6 +6,7 @@ const {
   getProfile,
   adminRegister,
   userRegister,
+  deleteProfile
 } = require("./auth.controller");
 
 const router = express.Router();
@@ -19,5 +20,7 @@ router.post("/login", login);
 router.post("/logout", authValidation, logout);
 
 router.get("/getProfile", authValidation, getProfile);
+
+router.delete("/delete/profile",authValidation,deleteProfile);
 
 module.exports = router;

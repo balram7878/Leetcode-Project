@@ -2,6 +2,7 @@ const { loginValidation } = require("../../utils/validate.user");
 const { registrationValidation } = require("../../utils/validate.user");
 const client = require("../../config/redis");
 const user = require("../../models/User.model");
+const submission_model = require("../../models/Submission.model");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 require("dotenv").config();
@@ -15,6 +16,19 @@ const getProfile = async (req, res) => {
     res.status(200).json(u);
   } catch (err) {
     res.status(400).json({ error: err.message });
+  }
+};
+
+const deleteProfile = async (req, res) => {
+  try {
+    const userId = req.user.sub;
+    if (!userId) return res.status(404).json({ message: "user not found" });
+    const u = await user.findByIdAndDelete(userId);
+    if (!u) return res.status(404).json({ message: "User not found" });
+    const submission = await submission_model.deleteMany({ userId });
+    res.status(200).json({ message: "user deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Internal Server Error" + err.message });
   }
 };
 
@@ -104,4 +118,5 @@ module.exports = {
   getProfile,
   userRegister,
   adminRegister,
+  deleteProfile
 };

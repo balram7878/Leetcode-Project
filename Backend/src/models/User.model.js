@@ -29,21 +29,23 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "user",
     },
-    problemSolved: {
-      type: Number,
-    },
+    problemSolved: [
+      {
+        type: [],
+      },
+    ],
   },
   { timestamps: true }
 );
 
-userSchema.statics.generatePasswordHash = async function(password) {
+userSchema.statics.generatePasswordHash = async function (password) {
   try {
     return await bcrypt.hash(password, 10);
   } catch (err) {
     throw err;
   }
 };
-userSchema.methods.comparePassword = async function (password){
+userSchema.methods.comparePassword = async function (password) {
   try {
     return await bcrypt.compare(password, this.password);
   } catch (err) {
@@ -51,8 +53,13 @@ userSchema.methods.comparePassword = async function (password){
   }
 };
 
+// userSchema.post("findOneAndDelete", async (userInfo) => {
+//   if (userInfo)
+//     mongoose.model("Submission").deleteMany({ userId: userInfo._id });
+// });
 
 const User = mongoose.model("User", userSchema);
 
-
 module.exports = User;
+
+//bcwtf

@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, default: mongoose } = require("mongoose");
 
 const problemSchema = new Schema(
   {
@@ -85,8 +85,13 @@ const problemSchema = new Schema(
       },
     ],
     problemCreator: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
+      type: [
+        {
+          type: mongoose.Schema.ObjectId,
+          ref: "Problem",
+        },
+      ],
+      unique: true,
     },
   },
   { timestamps: true }
