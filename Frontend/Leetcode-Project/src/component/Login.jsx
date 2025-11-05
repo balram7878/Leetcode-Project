@@ -100,7 +100,7 @@ export default function Login() {
         }
     `}
           >
-            Create Account
+            Login
           </button>
 
           <p className="text-sm text-gray-400 text-center mt-2">

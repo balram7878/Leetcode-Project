@@ -17,7 +17,7 @@ function App() {
   if (loading) {
     return (
       <div className="min-h-screen flex justify-center items-center">
-          <span class="loading loading-dots loading-xl"></span>
+          <span className="loading loading-dots loading-xl"></span>
       </div>
     );
   }

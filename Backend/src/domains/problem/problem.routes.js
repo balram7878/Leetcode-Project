@@ -15,7 +15,7 @@ const problemRouter = Router();
 
 problemRouter.get("/getProblem/:id", authValidation, getProblem);
 problemRouter.get("/getAllProblems", authValidation, getAllProblems);
-problemRouter.get("/problemsSolved", authValidation, solvedProblems);
+problemRouter.get("/solvedProblems", authValidation, solvedProblems);
 
 //-->
 problemRouter.post("/create", adminValidation, createProblem); //create problem

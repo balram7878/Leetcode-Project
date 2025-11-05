@@ -123,8 +123,9 @@ const userRegister = async (req, res) => {
 
 const authUser = async (req, res) => {
   try {
+    
     res.status(200).json({
-      firstName: req.user.firstName,
+      firstName: req.user.name,
       email: req.user.email,
       message: "authenticated user",
     });
