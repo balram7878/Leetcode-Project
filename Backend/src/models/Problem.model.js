@@ -16,18 +16,7 @@ const problemSchema = new Schema(
       required: true,
     },
     tags: {
-      type: String,
-      enum: [
-        "Array",
-        "String",
-        "Linked List",
-        "Stack",
-        "Tree",
-        "Graph",
-        "Heap",
-        "Queue",
-        "Dynamic Programming",
-      ],
+      type: Array,
       required: true,
     },
     visibleTestCases: [
