@@ -12,11 +12,10 @@ const Tag = ({ children, colorClass, size = "sm" }) => (
   </span>
 );
 
-const SingleProblemCard = ({  problem, solvedProblemIds }) => {
+const SingleProblemCard = ({ problem, solvedProblemIds }) => {
   const isSolved = solvedProblemIds.has(problem._id);
   const difficulty = problem.difficulty;
   const tags = problem.tags || [];
-
 
   const getDifficultyColor = (level) => {
     switch (level?.toLowerCase()) {
@@ -88,19 +87,33 @@ const SingleProblemCard = ({  problem, solvedProblemIds }) => {
 
 function ProblemList() {
   const { user } = useSelector((state) => state.auth);
-  const { allProblems, solvedProblems,loading } = useSelector(
+  const { allProblems, solvedProblems, loading } = useSelector(
     (state) => state.problemSlice
   );
+  const [filter, setFilter] = useState({
+    problems: "all",
+    difficulty: "all",
+    tags: "all",
+  });
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(getAllProblems());
-    dispatch(getSolvedProblems());
+    if (user) dispatch(getSolvedProblems());
   }, [user, dispatch]);
 
   const solvedProblemIds = new Set((solvedProblems || []).map((p) => p._id));
 
-  
+  const filteredProblems = allProblems.filter((p) => {
+    const matchesProblems =
+      filter.problems === "all" ||
+      (filter.problems === "solved" && solvedProblemIds.has(p._id));
+    const matchesTags = filter.tags === "all" || p.tags?.includes(filter.tags);
+    const matchesDifficulty =
+      filter.difficulty === "all" ||
+      p.difficulty.toLowerCase() === filter.difficulty.toLowerCase();
+    return matchesProblems && matchesTags && matchesDifficulty;
+  });
 
   if (loading) {
     return (
@@ -130,9 +143,60 @@ function ProblemList() {
       <h1 className="text-4xl font-extrabold text-white mb-8 mt-10 border-b border-gray-700 pb-3">
         Problems
       </h1>
-
+      <div className="min-w-screen flex justify-center items-center gap-5">
+        <fieldset className="fieldset">
+          <legend className="fieldset-legend">Problems</legend>
+          <select
+            value={filter.problems}
+            onChange={(e) =>
+              setFilter((prev) => ({ ...prev, problems: e.target.value }))
+            }
+            defaultValue="all"
+            className="select"
+          >
+            <option value={"all"}>All Problems</option>
+            <option>Solved Problems</option>
+          </select>
+        </fieldset>
+        <fieldset className="fieldset">
+          <legend className="fieldset-legend">Difficulty</legend>
+          <select
+            value={filter.difficulty}
+            onChange={(e) =>
+              setFilter((prev) => ({ ...prev, difficulty: e.target.value }))
+            }
+            defaultValue="all"
+            className="select"
+          >
+            <option value={"all"}>all</option>
+            <option>Easy</option>
+            <option>Medium</option>
+            <option>Hard</option>
+          </select>
+        </fieldset>
+        <fieldset className="fieldset">
+          <legend className="fieldset-legend">Problem Topic</legend>
+          <select
+            value={filter.tags}
+            onChange={(e) =>
+              setFilter((prev) => ({ ...prev, tags: e.target.value }))
+            }
+            defaultValue="all"
+            className="select"
+          >
+            <option value={"all"}>all</option>
+            <option>Array</option>
+            <option>Linked List</option>
+            <option>Stack</option>
+            <option>Graph</option>
+            <option>Queue</option>
+            <option>Dynamic Programming</option>
+            <option>Tree</option>
+          </select>
+        </fieldset>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {allProblems.map((problem) => (
+        {filteredProblems.map((problem) => (
           <SingleProblemCard
             key={problem._id}
             problem={problem}
