@@ -6,7 +6,6 @@ export const getAllProblems = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosClient.get("problem/getAllProblems");
-      console.log(response.data);
       return response.data;
     } catch (err) {
       return rejectWithValue(err.message);
@@ -19,7 +18,6 @@ export const getSolvedProblems = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosClient.get("problem/solvedProblems");
-      console.log(response.data);
       return response.data;
     } catch (err) {
       return rejectWithValue(err.message);

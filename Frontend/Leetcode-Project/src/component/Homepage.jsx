@@ -1,5 +1,5 @@
-import ProblemList from "./Homepage Compenents/ProblemList";
-import Header from "./Homepage Compenents/Header";
+import ProblemList from "./Homepage Pages/ProblemList";
+import Header from "./Homepage Pages/Header";
 
 export default function Homepage() {
   return (

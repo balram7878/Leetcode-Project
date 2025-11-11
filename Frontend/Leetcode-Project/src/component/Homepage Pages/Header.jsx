@@ -3,7 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../utils/authSlice";
 
 export default function Header() {
-  const { firstName } = useSelector((state) => state?.auth?.user);
+  const { firstName } = useSelector((state) => {
+    console.log(state.auth);
+    return state?.auth?.user;
+  });
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useDispatch();
@@ -76,7 +79,6 @@ export default function Header() {
           </div>
         </div>
       </header>
-
     </>
   );
 }
