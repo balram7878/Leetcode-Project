@@ -1,10 +1,10 @@
 const express = require("express");
-const main = require("../config/db");
+const main = require("./config/db");
 const cookieParser = require("cookie-parser");
-const userRouter = require("../domains/auth/auth.routes");
-const problemRouter = require("../domains/problem/problem.routes");
-const solutionRouter = require("../domains/solution/solution.routes");
-const client = require("../config/redis");
+const userRouter = require("./domains/auth/auth.routes");
+const problemRouter = require("./domains/problem/problem.routes");
+const solutionRouter = require("./domains/solution/solution.routes");
+const client = require("./config/redis");
 const cors = require("cors");
 require("dotenv").config();
 

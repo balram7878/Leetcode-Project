@@ -18,7 +18,7 @@ function App() {
     (state) => state?.auth
   );
 
-  // console.log(user);
+  console.log(user);
 
   useEffect(() => {
     dispatch(authUser());
@@ -43,6 +43,10 @@ function App() {
         <Route
           path="/login"
           element={isAuthenticated ? <Navigate to="/" /> : <Login />}
+        ></Route>
+        <Route
+          path="/signup"
+          element={isAuthenticated ? <Navigate to="/" /> : <Signup />}
         ></Route>
         <Route
           path="/admin"
