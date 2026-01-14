@@ -8,8 +8,6 @@ const {
 const problem_model = require("../../models/Problem.model");
 const submission_model = require("../../models/Submission.model");
 
-
-
 const createProblem = async (req, res) => {
   try {
     validateProblem(req.body);
@@ -80,16 +78,56 @@ const deleteProblem = async (req, res) => {
   }
 };
 
-const getAllProblems = async (req, res) => {
+const getProblems = async (req, res) => {
+
   try {
-    // const limit=0;
-    // const page=0;
-    // const skip=(page-1)*limit;
-    // const allProblems=await problem_model.find(req.params.id).skip(skip).limit(limit);
-    const allProblems = await problem_model
-      .find()
-      .select("_id title tags difficulty");
-    res.status(200).json(allProblems);
+    const {
+      page = 1,
+      limit = 5,
+      search = "",
+      sort = "created_desc",
+    } = req.query;
+
+    const skip = (page - 1) * limit;
+
+    //SEARCH (title OR problem id)
+    const query = {
+      $or: [
+        { title: { $regex: search, $options: "i" } },
+        { _id: search.match(/^[0-9a-fA-F]{24}$/) ? search : null },
+      ],
+    };
+
+    // remove null _id condition
+    if (!search.match(/^[0-9a-fA-F]{24}$/)) {
+      query.$or.pop();
+    }
+
+    // SORT
+    const sortMap = {
+      created_desc: { createdAt: -1 },
+      created_asc: { createdAt: 1 },
+      title_asc: { title: 1 },
+      title_desc: { title: -1 },
+    };
+
+    const problems = await problem_model.find(query)
+      .sort(sortMap[sort])
+      .skip(skip)
+      .limit(Number(limit))
+      .select("title difficulty tags createdAt");
+
+    const total = await problem_model.countDocuments(query);
+
+    res.status(200).json({
+      data: problems,
+      pagination: {
+        page: Number(page),
+        limit: Number(limit),
+        totalPages: Math.ceil(total / limit),
+        totalItems: total,
+      },
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -192,7 +230,7 @@ const updateProblem = async (req, res) => {
 module.exports = {
   createProblem,
   deleteProblem,
-  getAllProblems,
+  getProblems,
   getProblem,
   solvedProblems,
   updateProblem,

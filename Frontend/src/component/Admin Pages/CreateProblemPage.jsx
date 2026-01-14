@@ -290,7 +290,7 @@ export default function CreateProblem() {
         {/* SUBMIT */}
         <button
           type="submit"
-          className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 font-semibold hover:opacity-90 transition"
+          className="w-full py-3 rounded-xl bg-[#141414] border border-gray-700 text-gray-200 font-semibold hover:bg-[#1e1e1e] transition"
         >
           Create Problem
         </button>

@@ -7,14 +7,14 @@ const {
   createProblem,
   updateProblem,
   deleteProblem,
-  getAllProblems,
+  getProblems,
   solvedProblems,
 } = require("./problem.controller");
 
 const problemRouter = Router();
 
 problemRouter.get("/getProblem/:id", authValidation, getProblem);
-problemRouter.get("/getAllProblems", authValidation, getAllProblems);
+problemRouter.get("/getProblems", authValidation, getProblems);
 problemRouter.get("/solvedProblems", authValidation, solvedProblems);
 
 //-->
