@@ -1,188 +1,90 @@
 import { useNavigate } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../../utils/authSlice";
 
-const PlusCircle = (props) => (
-  <svg
-    {...props}
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <circle cx="12" cy="12" r="10" />
-    <path d="M12 8v8M8 12h8" />
-  </svg>
-);
-const Trash2 = (props) => (
-  <svg
-    {...props}
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M3 6h18M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-    <line x1="10" x2="10" y1="11" y2="17" />
-    <line x1="14" x2="14" y1="11" y2="17" />
-  </svg>
-);
-const Eye = (props) => (
-  <svg
-    {...props}
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-    <circle cx="12" cy="12" r="3" />
-  </svg>
-);
-const RefreshCw = (props) => (
-  <svg
-    {...props}
-    xmlns="http://www.w3.org/2000/svg"
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M3 2v6h6" />
-    <path d="M21 22v-6h-6" />
-    <path d="M21 16a9 9 0 0 0-9-9c-1.8 0-3.5.5-4.9 1.4" />
-    <path d="M3 8a9 9 0 0 1 9 9c1.8 0 3.5-.5 4.9-1.4" />
-  </svg>
-);
+export default function AdminDashboardPage() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
 
-const AdminCard = ({ title, description, icon: Icon, color, onClick }) => {
-  const baseClasses =
-    "flex flex-col items-start p-6 rounded-xl shadow-2xl transition duration-300 transform cursor-pointer";
-  const hoverClasses = `hover:ring-4 ${color.ring} hover:scale-[1.03]`;
+  const initials = user?.firstName ? user.firstName[0].toUpperCase() : "A";
 
+  return (
+    <div className="min-h-screen bg-[#0f0f0f] text-gray-200 flex flex-col">
+      {/* HEADER */}
+      <header className="bg-[#161616] border-b border-gray-800 px-6 py-4 flex justify-between items-center">
+        <h1 className="text-2xl font-bold tracking-wide">CodeTree</h1>
+        <div className="relative group">
+          <div className="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center font-bold cursor-pointer">
+            {initials}
+          </div>
+          <div className="absolute right-0 mt-2 bg-[#161616] border border-gray-800 rounded-lg w-44 hidden group-hover:block">
+            <button onClick={() => navigate("/admin/profile")} className="w-full text-left px-4 py-2 hover:bg-gray-800">Profile</button>
+            <button onClick={() => navigate("/admin/settings")} className="w-full text-left px-4 py-2 hover:bg-gray-800">Settings</button>
+            <button onClick={() => dispatch(logout())} className="w-full text-left px-4 py-2 hover:bg-gray-800 text-red-400">Logout</button>
+          </div>
+        </div>
+      </header>
+
+      {/* HERO */}
+      <section className="flex-1 max-w-6xl mx-auto px-6 py-12 space-y-10">
+        <div className="space-y-2">
+          <h2 className="text-4xl font-extrabold tracking-tight">Welcome back, {user?.firstName}</h2>
+          <p className="text-gray-400 text-lg">You run the platform. Shape the problems. Build the future of CodeTree.</p>
+        </div>
+
+        {/* CARDS */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <BigCard
+            title="Create Problem"
+            subtitle="Design new challenges"
+            desc="Author high quality problems with constraints, test cases and reference solutions. This is where the platform grows."
+            onClick={() => navigate("/admin/problems/create")}
+            accent="from-indigo-600/20 to-indigo-600/5"
+          />
+          <BigCard
+            title="Update Problems"
+            subtitle="Refine and improve"
+            desc="Edit statements, improve test cases and keep problems accurate as the platform evolves."
+            onClick={() => navigate("/admin/problems")}
+            accent="from-emerald-600/20 to-emerald-600/5"
+          />
+          <BigCard
+            title="Delete Problems"
+            subtitle="Maintain quality"
+            desc="Safely remove outdated or broken problems using a protected deletion workflow."
+            onClick={() => navigate("/admin/problems")}
+            accent="from-rose-600/20 to-rose-600/5"
+          />
+          <BigCard
+            title="All Problems"
+            subtitle="Full control"
+            desc="Search, sort and manage the entire problem library with pagination and filters."
+            onClick={() => navigate("/admin/problems")}
+            accent="from-sky-600/20 to-sky-600/5"
+          />
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="bg-[#161616] border-t border-gray-800 px-6 py-4 text-center text-sm text-gray-400">
+        © {new Date().getFullYear()} CodeTree. Built for builders.
+      </footer>
+    </div>
+  );
+}
+
+function BigCard({ title, subtitle, desc, onClick, accent }) {
   return (
     <div
-      className={`${baseClasses} ${hoverClasses} bg-gray-800 border-t-4 ${color.border}`}
       onClick={onClick}
+      className={`cursor-pointer bg-gradient-to-br ${accent} border border-gray-800 rounded-2xl p-6 hover:scale-[1.01] transition-transform`}
     >
-      <div className={`p-3 rounded-full ${color.bgLight} mb-4`}>
-        <Icon className={`w-8 h-8 ${color.text}`} />
-      </div>
-
-      <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
-      <p className="text-gray-400 text-sm">{description}</p>
-
-      <div
-        className={`mt-4 text-sm font-semibold ${color.text} hover:${color.textHover}`}
-      >
-        Go to tool &rarr;
+      <div className="space-y-3">
+        <h3 className="text-2xl font-bold tracking-tight">{title}</h3>
+        <p className="text-indigo-300 font-medium">{subtitle}</p>
+        <p className="text-gray-400 leading-relaxed">{desc}</p>
       </div>
     </div>
   );
-};
-
-const AdminDashboard = () => {
-  const navigate = useNavigate();
-
-  const cards = [
-    {
-      title: "Create New Problem",
-      description:
-        "Define a new coding challenge, set difficulty, and add sample test cases.",
-      icon: PlusCircle,
-      color: {
-        bgLight: "bg-green-500/10",
-        text: "text-green-400",
-        border: "border-green-500",
-        ring: "ring-green-500/30",
-      },
-      action: () => {
-        navigate("/admin/create-problem");
-      },
-    },
-    {
-      title: "Update Problem Details",
-      description: "Modify existing problem statements, tags, or test data.",
-      icon: RefreshCw,
-      color: {
-        bgLight: "bg-indigo-500/10",
-        text: "text-indigo-400",
-        border: "border-indigo-500",
-        ring: "ring-indigo-500/30",
-      },
-      action: () => {
-        navigate("/admin/update-problem");
-      },
-    },
-    {
-      title: "Show All Problems",
-      description:
-        "View the complete list of problems, including status and details.",
-      icon: Eye,
-      color: {
-        bgLight: "bg-sky-500/10",
-        text: "text-sky-400",
-        border: "border-sky-500",
-        ring: "ring-sky-500/30",
-      },
-      action: () => {
-        navigate("/admin/show-all-problems");
-      },
-    },
-    {
-      title: "Delete A Problem",
-      description:
-        "Permanently remove a problem from the database (Use with caution).",
-      icon: Trash2,
-      color: {
-        bgLight: "bg-red-500/10",
-        text: "text-red-400",
-        border: "border-red-500",
-        ring: "ring-red-500/30",
-      },
-      action: () => {
-        navigate("/admin/delete-problem");
-      },
-    },
-  ];
-
-  return (
-    <div className="p-8 bg-gray-900 min-h-screen">
-      <h1 className="text-4xl font-extrabold text-white mb-10 border-b border-gray-700 pb-3">
-        Admin Control Panel
-      </h1>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
-        {cards.map((card) => (
-          <AdminCard
-            key={card.title}
-            title={card.title}
-            description={card.description}
-            icon={card.icon}
-            color={card.color}
-            onClick={card.action}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-export default AdminDashboard;
+}

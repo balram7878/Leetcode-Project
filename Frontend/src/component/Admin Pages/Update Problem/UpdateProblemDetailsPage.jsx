@@ -70,11 +70,11 @@ export default function UpdateProblemDetailPage() {
   }, [id, reset]);
 
   const onSubmit = async (currentData) => {
-    console.log("before initial data", currentData, "/n", initialData);
+    // console.log("before initial data", currentData, "/n", initialData);
     if (!initialData) return;
     console.log("onsubmit");
     const payload = getUpdatePayload(initialData, currentData);
-    console.log("/n", payload);
+    // console.log("/n", payload);
     if (Object.keys(payload).length === 0) {
       alert("No changes detected");
       return;
