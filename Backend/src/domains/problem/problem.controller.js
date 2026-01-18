@@ -140,7 +140,7 @@ const getProblem = async (req, res) => {
     const problem = await problem_model
       .findById(_id)
       .select(
-        "_id title description tags difficulty visibleTestCases boilerplateCode"
+        "_id title description tags difficulty visibleTestCases boilerplateCode hiddenTestCases constraints referenceSolution"
       );
     if (!problem) return res.status(404).json({ message: "problem not found" });
     res.status(200).json(problem);
@@ -168,6 +168,7 @@ const solvedProblems = async (req, res) => {
 
 const updateProblem = async (req, res) => {
   try {
+    console.log("update problem from backend");
     const _id = req.params.id;
     const data = req.body;
     if (!_id) return res.status(404).json({ message: "id missing" });

@@ -6,8 +6,9 @@ import AdminPage from "./component/AdminPage";
 import AdminDashboard from "./component/Admin Pages/AdminDashboard";
 import DeleteProblemPage from "./component/Admin Pages/DeleteProblemPage";
 import ShowAllProblemsPage from "./component/Admin Pages/ShowAllProblemsPage";
-import UpdateProblemPage from "./component/Admin Pages/UpdateProblemPage";
+import UpdateProblemPage from "./component/Admin Pages/Update Problem/UpdateProblemPage";
 import CreateProblemPage from "./component/Admin Pages/CreateProblemPage";
+import UpdateProblemDetailPage from "./component/Admin Pages/Update Problem/UpdateProblemDetailsPage";
 import { authUser } from "./utils/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
@@ -57,6 +58,10 @@ function App() {
           <Route path="delete-problem" element={<DeleteProblemPage />} />
           <Route path="update-problem" element={<UpdateProblemPage />} />
           <Route path="show-all-problems" element={<ShowAllProblemsPage />} />
+          <Route
+            path="problem/:id/edit"
+            element={<UpdateProblemDetailPage />}
+          ></Route>
         </Route>
       </Routes>
     </>
