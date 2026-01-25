@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../../utils/authSlice";
 
+
 export default function Header() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -123,13 +124,13 @@ export default function Header() {
                   >
                     Admin Panel
                   </button> */}
-
+{/* 
                   <button
                     onClick={() => navigate("/problems")}
                     className="w-full text-left px-4 py-3 text-gray-200 rounded-lg hover:bg-gray-700/40 hover:text-gray-100 transition-all duration-200 text-sm font-medium"
                   >
                     Explore Problems
-                  </button>
+                  </button> */}
                 </div>
 
                 {/* Divider */}

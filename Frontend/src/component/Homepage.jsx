@@ -1,4 +1,3 @@
-import ProblemList from "./Homepage Pages/ProblemList";
 import Header from "./Homepage Pages/Header";
 
 export default function Homepage() {
@@ -8,7 +7,7 @@ export default function Homepage() {
         <Header />
         {/* FOOTER */}
         <footer className="bg-[#161616] border-t border-gray-800 px-6 py-4 text-center text-sm text-gray-400 ">
-          © {new Date().getFullYear()} CodeTree. Built for builders.
+          © {new Date().getFullYear()} CodeTree. Built for coders.
         </footer>
       </div>
     </>

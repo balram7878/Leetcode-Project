@@ -11,6 +11,8 @@ import CreateProblemPage from "./component/Admin Pages/CreateProblemPage";
 import UpdateProblemDetailPage from "./component/Admin Pages/Update Problem/UpdateProblemDetailsPage";
 import AdminProblemManagerPage from "./component/Admin Pages/DeleteProblemPage";
 import ProfilePage from "./component/Admin Pages/Profile";
+import Practice from "./component/Practice/Practice";
+import ProblemsPage from "./component/Problems/ProblemPage";
 import { authUser } from "./utils/authSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
@@ -44,12 +46,20 @@ function App() {
           element={isAuthenticated ? <Homepage /> : <Navigate to="/login" />}
         ></Route>
         <Route
+          path="/problems"
+          element={isAuthenticated ? <ProblemsPage /> : <Navigate to="/login" />}
+        ></Route>
+        <Route
           path="/login"
           element={isAuthenticated ? <Navigate to="/" /> : <Login />}
         ></Route>
         <Route
           path="/signup"
           element={isAuthenticated ? <Navigate to="/" /> : <Signup />}
+        ></Route>
+        <Route
+          path="/practice/:id"
+          element={isAuthenticated ? <Practice /> : <Navigate to="/login" />}
         ></Route>
         <Route
           path="/admin"

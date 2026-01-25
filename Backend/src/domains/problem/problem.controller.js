@@ -23,7 +23,7 @@ const createProblem = async (req, res) => {
       problemCreator,
     } = req.body;
 
-    console.log("Problem validated");
+    // console.log("Problem validated");
 
     const submissions = [];
 
@@ -44,7 +44,7 @@ const createProblem = async (req, res) => {
     const tokensArray = submissionTokens.map((e) => e.token);
     const tokensString = tokensArray.join(",");
     const finalSubmissionResult = await getBatchedSubmission(tokensString);
-    console.log(finalSubmissionResult);
+    // console.log(finalSubmissionResult);
     for (let { status_id } of finalSubmissionResult.submissions) {
       if (status_id != 3) {
         return res.status(400).json({
@@ -115,10 +115,10 @@ const getProblems = async (req, res) => {
       .sort(sortMap[sort])
       .skip(skip)
       .limit(Number(limit))
-      .select("title difficulty tags createdAt");
+      .select("_id title difficulty tags createdAt isSolved");
 
     const total = await problem_model.countDocuments(query);
-
+    // console.log(problems);
     res.status(200).json({
       data: problems,
       pagination: {
@@ -168,7 +168,7 @@ const solvedProblems = async (req, res) => {
 
 const updateProblem = async (req, res) => {
   try {
-    console.log("update problem from backend");
+    // console.log("update problem from backend");
     const _id = req.params.id;
     const data = req.body;
     if (!_id) return res.status(404).json({ message: "id missing" });
@@ -206,7 +206,7 @@ const updateProblem = async (req, res) => {
       const tokensArray = submissionTokens.map((e) => e.token);
       const tokensString = tokensArray.join(",");
       const finalSubmissionResult = await getBatchedSubmission(tokensString);
-      console.log(finalSubmissionResult);
+      // console.log(finalSubmissionResult);
       for (let { status_id } of finalSubmissionResult.submissions) {
         if (status_id != 3) {
           return res.status(400).json({

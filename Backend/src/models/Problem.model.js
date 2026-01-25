@@ -19,6 +19,14 @@ const problemSchema = new Schema(
       type: Array,
       required: true,
     },
+    isSolved: {
+      type: Boolean,
+      default: false,
+    },
+    solvedCount: {
+      type: Number,
+      default: 0,
+    },
     visibleTestCases: [
       {
         stdin: {
@@ -82,6 +90,13 @@ const problemSchema = new Schema(
         },
       ],
       unique: true,
+    },
+    updatedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    updatedReason: {  
+      type: String,
     },
     constraints: {
       type: [String],
